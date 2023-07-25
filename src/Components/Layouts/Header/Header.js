@@ -36,7 +36,7 @@ function Header() {
                 removeCookie('access_token');
                 removeCookie('refresh_token');
                 localStorage.removeItem("user_data");
-                // localStorage.removeItem("access_token");
+                localStorage.removeItem("access_token");
                 Swal.fire({
                     position: 'top-end',
                     icon: 'success',

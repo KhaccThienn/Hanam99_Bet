@@ -3,23 +3,25 @@ import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
 
-
 //get token in cookie
 const getCookie = (name) => {
-    const cookieValue = document.cookie?.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)') || null;
-    return cookieValue ? cookieValue.pop() : null;
+    const cookieValue = document.cookie.match(/(^|;)\\s*' + name + '\\s*=\\s*([^;]+)/) || null;
+    return cookieValue ? cookieValue[1] : null;
 }
 
+// get accesstoken in localStorage
 const getCookieLocalStorage = () => {
     const accessToken = localStorage.getItem('access_token') ? localStorage.getItem('access_token') : null;
-    return accessToken ? accessToken : "hehehehe";
+    return accessToken ? accessToken : null;
 }
 
+// config ve baseURL API va header
 export const axiosInstance = axios.create(
     {
         baseURL: "https://api.hanam88.com",
         headers: {
-            Authorization: `Bearer ${getCookieLocalStorage()}`
+            Authorization: `Bearer ${getCookieLocalStorage()}`,
+            "Content-Type": "application/json"
         }
     }
 );
@@ -61,7 +63,7 @@ async function refreshToken() {
 
 //response
 axiosInstance.interceptors.response.use(config => {
-    console.log(getCookie('access_token'));
+    console.log(getCookieLocalStorage());
     config.headers.Authorization = `Bearer ${getCookie('access_token')}`;
     return config;
 },
