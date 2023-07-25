@@ -32,6 +32,7 @@ export const login = async (data) => {
 
 export const changePassword = async (data) => {
     try {
+        config.headers['Authorization'] = `Bearer ${getCookieLocalStorage()}`;
         const res = await http.post(`${URLAPI}/quiz/accounts/changepassword`, data, config);
         return [res, null];
     } catch (error) {

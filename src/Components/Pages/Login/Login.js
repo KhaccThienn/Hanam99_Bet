@@ -52,36 +52,36 @@ function Login() {
         }
 
         if (error) {
-            console.log(error.response.data);
+            console.log(error);
 
             Swal.fire({
                 position: 'top-end',
                 icon: 'error',
-                title: error.response.data.msg,
+                title: error.response,
                 showConfirmButton: false,
                 timer: 1500
             });
 
-            setErr(error.response.data);
+            setErr(error.response);
         }
     }
 
     return (
         <div className='container'>
             <form>
-                {err && <p className='text-danger'>{err.msg}</p>}
+                {err && <p className='text-danger'>{err?.msg}</p>}
                 <div className="form-group">
                     <label htmlFor="username">Username</label>
                     <input type="text"
                         onChange={e => handleChangeInput(e)}
-                        className={err.msg ? "form-control is-invalid" : "form-control"}
+                        className={err?.msg ? "form-control is-invalid" : "form-control"}
                         id="username" name='username' />
                 </div>
                 <div className="form-group">
                     <label htmlFor="password">Password</label>
                     <input type="password"
                         onChange={e => handleChangeInput(e)}
-                        className={err.msg ? "form-control is-invalid" : "form-control"}
+                        className={err?.msg ? "form-control is-invalid" : "form-control"}
                         name='password' id="password" />
                 </div>
                 <button type="button" onClick={() => handleSubmit()} className="btn btn-primary">Submit</button>

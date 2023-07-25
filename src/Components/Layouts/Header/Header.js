@@ -37,6 +37,7 @@ function Header() {
                 removeCookie('refresh_token');
                 localStorage.removeItem("user_data");
                 localStorage.removeItem("access_token");
+                localStorage.removeItem("refresh_token");
                 Swal.fire({
                     position: 'top-end',
                     icon: 'success',
@@ -84,16 +85,21 @@ function Header() {
                             (userData?.accountId && userDatas.user?.accountId)
                             &&
 
-                            <li className="nav-item dropdown">
-                                <Link className="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
-                                    Account
-                                </Link>
-                                <div className="dropdown-menu">
-                                    <Link className="dropdown-item" to={"/account"}>Change Password</Link>
-                                    <div className="dropdown-divider"></div>
-                                    <button className="dropdown-item" onClick={() => handleLogout()}>Log Out</button>
-                                </div>
-                            </li>
+                            <>
+                                <li className="nav-item dropdown">
+                                    <Link className="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                                        Account
+                                    </Link>
+                                    <div className="dropdown-menu">
+                                        <Link className="dropdown-item" to={"/account"}>Change Password</Link>
+                                        <div className="dropdown-divider"></div>
+                                        <button className="dropdown-item" onClick={() => handleLogout()}>Log Out</button>
+                                    </div>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link" to={"/category"}>List Category</Link>
+                                </li>
+                            </>
                         }
 
 

@@ -5,6 +5,7 @@ const userData = localStorage.key(0) ? JSON.parse(localStorage.getItem("user_dat
 const setItemFunction = (item) => {
     localStorage.setItem("user_data", JSON.stringify(item));
     localStorage.setItem("access_token", JSON.stringify(item.accesstoken));
+    localStorage.setItem("refresh_token", JSON.stringify(item.refreshtoken));
 }
 
 const initState = {
