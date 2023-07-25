@@ -6,6 +6,8 @@ import Account from "./Components/Pages/Account/Account";
 import ListCategory from "./Components/Pages/Category/ListCategory";
 import AddCategory from "./Components/Pages/Category/AddCategory";
 import UpdateCategory from "./Components/Pages/Category/UpdateCategory";
+import ListProduct from "./Components/Pages/Product/ListProduct";
+import AddProduct from "./Components/Pages/Product/AddProduct";
 
 function App() {
   return (
@@ -18,6 +20,9 @@ function App() {
         <Route path="/category" element={<MainLayouts children={<ListCategory />} />} />
         <Route path="/category/create" element={<MainLayouts children={<AddCategory />} />} />
         <Route path="/category/edit/:id" element={<MainLayouts children={<UpdateCategory />} />} />
+
+        <Route path="/product" element={<MainLayouts children={<ListProduct />} />} />
+        <Route path="/product/add" element={<MainLayouts children={<AddProduct />} />} />
       </Routes>
     </>
   );

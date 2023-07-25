@@ -37,16 +37,49 @@ export const axiosInstance = axios.create(
 //default url
 axiosInstance.defaults.baseURL = 'https://api.hanam88.com'
 
-axios.interceptors.request.use(async (config) => {
+// axios.interceptors.request.use(async (config) => {
 
-    
-    // Check if the access token is valid
-    const token = getCookie('access_token') ? getCookie('access_token') : getAccessTokenLocalStorage();
-    const access_token = jwtDecode(token)
-    console.log(access_token);
-    const now = Math.floor(new Date().getTime() / 1000);
 
-    if (token) {
+//     // Check if the access token is valid
+//     const token = getCookie('access_token') ? getCookie('access_token') : getAccessTokenLocalStorage();
+//     const access_token = jwtDecode(token)
+//     console.log(access_token);
+//     const now = Math.floor(new Date().getTime() / 1000);
+
+//     if (token) {
+//         const access_token = jwtDecode(getCookie('access_token'))
+//         const now = Math.floor(new Date().getTime() / 1000);
+//         console.log('now', now, 'access token', access_token.exp);
+//         if (access_token.exp <= now) {
+//             console.log('refresh..');
+//             const choose = await Swal.fire({
+//                 title: "Session Has Expired, Please Login Again",
+//                 confirmButtonText: "OK",
+//             });
+//             if (choose.isConfirmed) {
+//                 await refreshToken()
+//             }
+//         }
+//     }
+
+//     if (access_token.exp >= now) {
+//         config.headers['Authorization'] = `Bearer ${token}`;
+//     } else {
+//         // The access token is not valid, so refresh it
+//         const newToken = await refreshToken();
+//         cookies.set('access_token', newToken.accesstoken, { maxAge: 100000000000 });
+//         cookies.set('refresh_token', newToken.refreshtoken, { maxAge: 100000000000 });
+//         config.headers['Authorization'] = `Bearer ${newToken.accesstoken}`;
+//     }
+
+//     return config;
+// });
+
+axiosInstance.interceptors.request.use(async (config) => {
+    if (Number(config.url?.indexOf('/login')) >= 0 || Number(config.url?.indexOf('refresh')) >= 0) {
+        return config
+    }
+    if (getCookie('access_token')) {
         const access_token = jwtDecode(getCookie('access_token'))
         const now = Math.floor(new Date().getTime() / 1000);
         console.log('now', now, 'access token', access_token.exp);
@@ -58,22 +91,20 @@ axios.interceptors.request.use(async (config) => {
             });
             if (choose.isConfirmed) {
                 await refreshToken()
+            } else {
+                window.location.href = '/'
             }
         }
     }
-
-    if (access_token.exp >= now) {
-        config.headers['Authorization'] = `Bearer ${token}`;
-    } else {
-        // The access token is not valid, so refresh it
-        const newToken = await refreshToken();
-        cookies.set('access_token', newToken.accesstoken, { maxAge: 100000000000 });
-        cookies.set('refresh_token', newToken.refreshtoken, { maxAge: 100000000000 });
-        config.headers['Authorization'] = `Bearer ${newToken.accesstoken}`;
+    if (getCookie('refresh_token') && !getCookie('access_token')) {
+        await refreshToken()
     }
+    return config
 
-    return config;
-});
+}, async (error) => {
+    console.log(error);
+})
+
 
 // Refresh the access token
 const refreshToken = async () => {
@@ -109,7 +140,6 @@ export const get = async (URL, config = {}) => {
 }
 
 export const post = async (URL, data, config = {}) => {
-
     const res = await axiosInstance.post(URL, data, config);
     return res.data;
 }

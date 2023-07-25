@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 function AddCategory() {
     const [postData, setPostData] = useState({
         categoryName: '',
-        active: true
+        active: "true"
     });
     const [err, setErr] = useState({});
 
@@ -24,8 +24,9 @@ function AddCategory() {
     }
 
     const handleSubmitForm = async () => {
+        postData.active = postData.active === "true" ? true : false;
+
         console.log(postData);
-        postData.active = postData.active == "true" ? true : false;
         const [result, error] = await CategoryService.createCategory(postData);
         if (result) {
             console.log(result);
@@ -61,8 +62,8 @@ function AddCategory() {
             <div className="form-group">
                 <label htmlFor="active">Activate Status</label>
                 <select className={err.title ? "custom-select is-invalid  rounded-0" : "custom-select  rounded-0"} onChange={handleChangeInput} name="active" id="active">
-                    <option value={true}>Activating</option>
-                    <option value={false}>Not Activating</option>
+                    <option value="true">Activating</option>
+                    <option value="false">Not Activating</option>
                 </select>
             </div>
             <button type='button' onClick={() => { handleSubmitForm() }} className='btn btn-primary rounded-0'>Submit</button>

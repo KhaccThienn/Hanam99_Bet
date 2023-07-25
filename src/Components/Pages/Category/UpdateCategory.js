@@ -10,7 +10,7 @@ function UpdateCategory() {
     const [postData, setPostData] = useState({
         categoryId: id,
         categoryName: '',
-        active: true
+        active: "true"
     });
     const [apiData, setApiData] = useState({});
     const [err, setErr] = useState({});
@@ -43,7 +43,7 @@ function UpdateCategory() {
     }
 
     const handleSubmitForm = async () => {
-        postData.active = postData.active == "true" ? true : false;
+        postData.active = postData.active === "true" ? true : false;
         console.log(postData);
         const [result, error] = await CategoryService.updateCategory(id, postData);
         if (result) {
@@ -84,8 +84,14 @@ function UpdateCategory() {
             <div className="form-group">
                 <label htmlFor="active">Activate Status</label>
                 <select defaultValue={apiData.active} className={err.title ? "custom-select is-invalid  rounded-0" : "custom-select  rounded-0"} onChange={handleChangeInput} name="active" id="active">
-                    <option value={true} selected={apiData.active ? true : false}>Activating</option>
-                    <option value={false} selected={!apiData.active ? true : false}>Not Activating</option>
+                    <option
+                        value={"true"}
+                        selected={apiData.active === "true" ? true : false}
+                    >Activating</option>
+                    <option
+                        value={"false"}
+                        selected={apiData.active === "false" ? false : true}
+                    >Not Activating</option>
                 </select>
             </div>
             <button type='button' onClick={() => { handleSubmitForm() }} className='btn btn-primary rounded-0'>Submit</button>

@@ -99,6 +99,9 @@ function Header() {
                                 <li className="nav-item">
                                     <Link className="nav-link" to={"/category"}>List Category</Link>
                                 </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link" to={"/product"}>List Product</Link>
+                                </li>
                             </>
                         }
 
