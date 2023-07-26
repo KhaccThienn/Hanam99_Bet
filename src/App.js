@@ -8,6 +8,7 @@ import AddCategory from "./Components/Pages/Category/AddCategory";
 import UpdateCategory from "./Components/Pages/Category/UpdateCategory";
 import ListProduct from "./Components/Pages/Product/ListProduct";
 import AddProduct from "./Components/Pages/Product/AddProduct";
+import UpdateProduct from "./Components/Pages/Product/UpdateProduct";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
 
         <Route path="/product" element={<MainLayouts children={<ListProduct />} />} />
         <Route path="/product/add" element={<MainLayouts children={<AddProduct />} />} />
+        <Route path="/product/edit/:id" element={<MainLayouts children={<UpdateProduct />} />} />
       </Routes>
     </>
   );

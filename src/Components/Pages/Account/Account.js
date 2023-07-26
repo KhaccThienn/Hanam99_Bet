@@ -48,7 +48,7 @@ function Account() {
             Swal.fire({
                 position: 'top-end',
                 icon: 'error',
-                title: error.response.data.msg,
+                title: error.response.data.msg ?? error.response.data.title,
                 showConfirmButton: false,
                 timer: 1500
             });

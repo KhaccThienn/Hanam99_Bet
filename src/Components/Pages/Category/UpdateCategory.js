@@ -62,7 +62,7 @@ function UpdateCategory() {
             Swal.fire({
                 position: 'top-end',
                 icon: 'error',
-                title: error.response.data.title,
+                title: error.response.data.title?? error.response.data.msg,
                 showConfirmButton: false,
                 timer: 1500
             });

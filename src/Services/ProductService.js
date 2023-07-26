@@ -65,7 +65,8 @@ export const createProduct = async (data) => {
 export const updateProduct = async (id, data) => {
     try {
         config.headers['Authorization'] = `Bearer ${getCookieLocalStorage()}`;
-        const res = await http.put(`${URLAPI}/quiz/products/update/${id}`, data, config);
+        config.headers['Content-Type'] = 'multipart/form-data';
+        const res = await http.put(`${URLAPI}/quiz/products/updateformdata/${id}`, data, config);
         return [res, null];
     } catch (error) {
         return [null, error];
