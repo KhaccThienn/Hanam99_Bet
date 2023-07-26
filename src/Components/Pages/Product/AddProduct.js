@@ -2,27 +2,31 @@ import React, { useState } from 'react'
 import * as CategoryService from "../../../Services/CategoryService"
 import * as ProductService from "../../../Services/ProductService"
 import { useEffect } from 'react';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 function AddProduct() {
 
-  const initState = {
-    productId: '',
-    productName: '',
-    priceOld: 0,
-    priceNew: 1,
-    picture: {},
-    description: '',
-    categoryId: '',
-    active: "true",
-  };
 
   const [category, setCategory] = useState([]);
   const [postImage, setPostImage] = useState();
-  const [postData, setPostData] = useState(initState)
+  const [postData, setPostData] = useState({
+    productId: '',
+    productName: '',
+    priceOld: 0,
+    priceNew: 0,
+    picture: '',
+    description: '',
+    categoryId: 16,
+    active: true
+  });
+
+  const navigate = useNavigate();
 
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
     setPostData({ ...postData, [name]: value });
   };
+
 
   const handleChangeFile = (e) => {
     setPostImage(e.target.files[0]);
@@ -40,25 +44,41 @@ function AddProduct() {
     }
   };
 
-  const handleSubmitForm = async () => {
-    const formData = new FormData();
+  const handleSubmitForm = async (e) => {
+    e.preventDefault();
 
-    formData.append("productId", postData.productId);
-    formData.append("productName", postData.productName);
-    formData.append("priceOld", postData.priceOld);
-    formData.append("priceNew", postData.priceNew);
-    formData.append("picture", postImage);
-    formData.append("description", postData.description);
-    formData.append("categoryId", postData.categoryId);
+    const formData = new FormData();
+    postData.categoryId = Number(postData.categoryId);
+    formData.append("productId", postData.productId ?? "");
+    formData.append("productName", postData.productName ?? "");
+    formData.append("priceOld", Number(postData.priceOld) ?? 0);
+    formData.append("priceNew", Number(postData.priceNew) ?? 0);
+    formData.append("picture", postData.picture ?? "");
+    formData.append("description", postData.description ?? "");
+    formData.append("categoryId", Number(postData.categoryId) ?? -1);
     formData.append("active", postData.active === "true" ? true : false);
 
-    console.log(postImage);
 
     const [result, error] = await ProductService.createProduct(formData);
     if (result) {
       console.log(result);
+      Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: "Add Success !",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      navigate('/product');
     }
     if (error) {
+      Swal.fire({
+        position: 'top-end',
+        icon: 'error',
+        title: error.response.data.msg,
+        showConfirmButton: false,
+        timer: 1500
+      });
       console.log(error);
     }
   };
@@ -69,57 +89,47 @@ function AddProduct() {
   }, [])
 
   return (
-    <div className='container p-5'>
-      <div className='form-group'>
+
+    <form onSubmit={handleSubmitForm} className='container p-5'>
+      <div className="form-group">
         <label>Product Id</label>
-        <input type='text' className='form-control rounded-0' onChange={(e) => handleChangeInput(e)} name='productId' />
+        <input type="text" className="form-control" name="productId" onChange={handleChangeInput} />
       </div>
 
-      <div className='form-group'>
+      <div className="form-group">
         <label>Product Name</label>
-        <input type='text' className='form-control rounded-0' onChange={(e) => handleChangeInput(e)} name='productName' />
+        <input type="text" className="form-control" name="productName" onChange={handleChangeInput} />
       </div>
 
-      <div className='form-group'>
+      <div className="form-group">
         <label>Product Old Price</label>
-        <input type='text' className='form-control rounded-0' onChange={(e) => handleChangeInput(e)} defaultValue={0} name='priceOld' />
+        <input type="text" className="form-control" name="priceOld" onChange={handleChangeInput} defaultValue={0} />
       </div>
 
-      <div className='form-group'>
+      <div className="form-group">
         <label>Product New Price</label>
-        <input type='text' className='form-control rounded-0' onChange={(e) => handleChangeInput(e)} name='priceNew' />
+        <input type="text" className="form-control" name="priceNew" onChange={handleChangeInput} />
       </div>
 
-      <div className='form-group'>
+      <div className="form-group">
         <label>Product Picture</label>
-        <input type='file' className='form-control rounded-0' name='picture' onChange={(e) => handleChangeFile(e)} />
-      </div>
-      <div className="w-25">
-        {postImage && (
-          <img
-            className='card-img'
-            alt={postImage.name}
-            src={URL.createObjectURL(postImage)}
-          />
-        )}
+        <input type="text" className="form-control" name="picture" onChange={handleChangeInput} />
       </div>
 
-      <div className='form-group'>
+      <div className="form-group">
         <label>Product Description</label>
-        <textarea name='description' cols="30" className='form-control' onChange={(e) => handleChangeInput(e)} rows="5"></textarea>
+        <textarea name="description" cols="30" className="form-control" onChange={handleChangeInput} rows="5"></textarea>
       </div>
 
       <div className="form-group">
         <label htmlFor="categoryId">Category</label>
         <select className="form-control" name="categoryId" onChange={handleChangeInput} id="categoryId">
           <option>Choose One</option>
-          {
-            category && category.map((e, i) => {
-              return (
-                <option value={e.categoryId} key={i}>{e.categoryId} - {e.categoryName}</option>
-              )
-            })
-          }
+          {category && category.map((e, i) => {
+            return (
+              <option value={e.categoryId} key={i}>{e.categoryId} - {e.categoryName}</option>
+            )
+          })}
         </select>
       </div>
 
@@ -128,14 +138,14 @@ function AddProduct() {
         <select
           // className={err.title ? "custom-select is-invalid  rounded-0" : "custom-select  rounded-0"}
           className="custom-select rounded-0"
-          onChange={handleChangeInput} name="active" id="active">
+          onChange={handleChangeInput} defaultValue={"true"} name="active" id="active">
           <option value="true">Activating</option>
           <option value="false">Not Activating</option>
         </select>
       </div>
 
-      <button className='btn btn-primary rounded-0 ' onClick={() => handleSubmitForm()}>Submit</button>
-    </div>
+      <button type="submit" className="btn btn-primary rounded-0">Submit</button>
+    </form>
   )
 }
 
